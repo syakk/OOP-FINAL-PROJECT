@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Canada Weather Information</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x"
+      crossorigin="anonymous"
+    />
+    <style>
+      /* Custom CSS style for carousel images */
+      #carouselExampleCaptions .carousel-item img {
+        height: 400px;
+        width: 100%;
+        object-fit: cover;
+      }
+
+      /* Center the carousel section */
+      #carouselExampleCaptions {
+        margin: 50px auto;
+      }
+
+      .container-xl {
+        margin: 30px;
+      }
+      .img-fluid {
+        margin-bottom: 15px;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100">
+    <div class="max-w-screen-md mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold mb-4">Canada Weather Information</h1>
+      <div class="flex justify-center">
+        <div class="w-72">
+          <select
+            id="city-select"
+            class="bg-white border border-gray-400 rounded-md py-2 px-4 block w-full appearance-none leading-normal"
+          >
+            <option value="Toronto">Toronto</option>
+            <option value="Vancouver">Vancouver</option>
+            <option value="Montreal">Montreal</option>
+            <option value="Calgary">Calgary</option>
+            <option value="Ottawa">Ottawa</option>
+          </select>
+        </div>
+      </div>
+      <div class="mt-8">
+        <div class="bg-white rounded-md shadow-md p-8">
+          <h2 class="text-2xl font-bold mb-4">
+            <span id="city-name"></span> Weather
+          </h2>
+          <p class="text-gray-600 mb-4">
+            <span id="weather-description"></span>
+          </p>
+          <p class="text-5xl font-bold text-gray-800">
+            <span id="temperature"></span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+      const apiKey = "9fd7a449d055dba26a982a3220f32aa2";
+      const citySelect = document.getElementById("city-select");
+      const cityName = document.getElementById("city-name");
+      const weatherDescription = document.getElementById("weather-description");
+      const temperature = document.getElementById("temperature");
+
+      const fetchWeather = async (city) => {
+        try {
+          const response = await axios.get(
+            `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`
+          );
+          const { name, weather, main } = response.data;
+          const { description } = weather[0];
+          const { temp } = main;
+          cityName.textContent = name;
+          weatherDescription.textContent = description;
+          temperature.textContent = `${temp}°C`;
+        } catch (error) {
+          console.error(error);
+        }
+      };
+
+      // Event listener to fetch weather information when a city is selected from the dropdown list
+      citySelect.addEventListener("change", () => {
+        const selectedCity = citySelect.value;
+        fetchWeather(selectedCity);
+      });
+
+      // Initial fetch of weather information for the default city (Toronto)
+      fetchWeather("Toronto");
+    </script>
+  </body>
+</html>

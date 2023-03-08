@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Canada Food Information</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x"
+      crossorigin="anonymous"
+    />
+    <style>
+      /* Custom CSS style for carousel images */
+      #carouselExampleCaptions .carousel-item img {
+        height: 400px;
+        width: 100%;
+        object-fit: cover;
+      }
+
+      /* Center the carousel section */
+      #carouselExampleCaptions {
+        margin: 50px auto;
+      }
+
+      .container-xl {
+        margin: 30px;
+      }
+      .img-fluid {
+        margin-bottom: 15px;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100">
+    <div class="max-w-screen-md mx-auto px-4 py-8">
+      <h1 class="text-3xl font-bold mb-4">Canada Food Information</h1>
+      <div class="flex justify-center">
+        <div class="w-72">
+          <select
+            id="meal-select"
+            class="bg-white border border-gray-400 rounded-md py-2 px-4 block w-full appearance-none leading-normal"
+          >
+            <option value="">Select a meal</option>
+            <option value="timbits">Timbits</option>
+            <option value="split_pea_soup">Split Pea Soup</option>
+            <option value="butter_tarts">Canadian Butter Tarts</option>
+            <option value="tourtiere">Tourtière</option>
+            <option value="nanaimo_bars">Nanaimo Bars</option>
+          </select>
+        </div>
+      </div>
+      <div class="mt-8">
+        <div class="bg-white rounded-md shadow-md p-8">
+          <h2 class="text-2xl font-bold mb-4"><span id="meal-name"></span></h2>
+          <img src="" alt="" id="meal-image" class="mb-4 rounded-md" />
+          <p class="text-gray-600 mb-4"><span id="meal-category"></span></p>
+          <p class="text-gray-600 mb-4"><span id="meal-instructions"></span></p>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+      const mealSelect = document.getElementById("meal-select");
+      const mealName = document.getElementById("meal-name");
+      const mealImage = document.getElementById("meal-image");
+      const mealCategory = document.getElementById("meal-category");
+      const mealInstructions = document.getElementById("meal-instructions");
+
+      const fetchMeal = async (meal) => {
+        try {
+          const response = await axios.get(
+            `https://www.themealdb.com/api/json/v1/1/search.php?s=${meal}`
+          );
+          const { meals } = response.data;
+          const { strMeal, strMealThumb, strCategory, strInstructions } =
+            meals[0];
+          mealName.textContent = strMeal;
+          mealImage.src = strMealThumb;
+          mealCategory.textContent = `Category: ${strCategory}`;
+          mealInstructions.textContent = `Instructions: ${strInstructions}`;
+        } catch (error) {
+          console.error(error);
+        }
+      };
+
+      // Event listener to fetch meal information when a meal is selected from the dropdown list
+      mealSelect.addEventListener("change", () => {
+        const selectedMeal = mealSelect.value;
+        fetchMeal(selectedMeal);
+      });
+    </script>
+  </body>
+</html>
